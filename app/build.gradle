@@ -53,5 +53,6 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    //OKHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 }
