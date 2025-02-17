@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.fk.weather.bean.NowResponse;
 import com.fk.weather.bean.SearchCityResponse;
 import com.fk.weather.databinding.ActivityMainBinding;
 import com.fk.weather.location.LocationCallback;
@@ -53,10 +54,13 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      */
     @Override
     protected void onCreate() {
+        setFullScreenImmersion();
         initLocation();
         requestPermission();
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
+
+
 
     /**
      * 数据观察
@@ -64,13 +68,29 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     @Override
     protected void onObserveData() {
         if (viewModel != null) {
+            //城市数据返回
             viewModel.searchCityResponseMutableLiveData.observe(this, searchCityResponse -> {
                 List<SearchCityResponse.LocationBean> location = searchCityResponse.getLocation();
                 if (location != null && location.size() > 0) {
                     String id = location.get(0).getId();
-                    Log.d("TAG", "城市ID: " + id);
+                    //获取到城市的ID
+                    if (id != null) {
+                        //通过城市ID查询城市实时天气
+                        viewModel.nowWeather(id);
+                    }
                 }
             });
+            //实况天气返回
+            viewModel.nowResponseMutableLiveData.observe(this, nowResponse -> {
+                NowResponse.NowBean now = nowResponse.getNow();
+                if (now != null) {
+                    binding.tvInfo.setText(now.getText());
+                    binding.tvTemp.setText(now.getTemp());
+                    binding.tvUpdateTime.setText("最近更新时间：" + nowResponse.getUpdateTime());
+                }
+            });
+            //错误信息返回
+            viewModel.failed.observe(this, this::showLongMsg);
         }
     }
 
@@ -143,7 +163,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         String district = bdLocation.getDistrict();    //获取区县
         String street = bdLocation.getStreet();    //获取街道信息
         String locationDescribe = bdLocation.getLocationDescribe();    //获取位置描述信息
-        binding.tvAddressDetail.setText(addr);//设置文本显示
+        binding.tvCityName.setText(addr);//设置文本显示
 
         if (viewModel != null && district != null) {
             //搜索城市
