@@ -14,8 +14,10 @@ import com.fk.weather.utils.EasyDate;
 import com.baidu.location.LocationClient;
 import com.fk.weather.bean.DailyResponse;
 import com.fk.weather.adapter.DailyAdapter;
+import com.fk.weather.adapter.LifestyleAdapter;
 import com.baidu.location.LocationClientOption;
 import com.fk.weather.bean.NowResponse;
+import com.fk.weather.bean.LifestyleResponse;
 import com.fk.weather.bean.SearchCityResponse;
 import com.fk.weather.databinding.ActivityMainBinding;
 import com.fk.weather.location.LocationCallback;
@@ -41,6 +43,10 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     //天气预报数据和适配器
     private final List<DailyResponse.DailyBean> dailyBeanList = new ArrayList<>();
     private final DailyAdapter dailyAdapter = new DailyAdapter(dailyBeanList);
+
+    //生活指数数据和适配器
+    private final List<LifestyleResponse.DailyBean> lifestyleList = new ArrayList<>();
+    private final LifestyleAdapter lifestyleAdapter = new LifestyleAdapter(lifestyleList);
 
     /**
      * 注册意图
@@ -71,12 +77,15 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     }
 
     /**
-     * 初始化未来天气页面视图
+     * 初始化
      */
     private void initView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager
+                (this, LinearLayoutManager.HORIZONTAL, false);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(dailyAdapter);
+        binding.rvLifestyle.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvLifestyle.setAdapter(lifestyleAdapter);
     }
 
     /**
@@ -96,6 +105,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                         viewModel.nowWeather(id);
                         //通过城市ID查询天气预报
                         viewModel.dailyWeather(id);
+                        //通过城市ID查询生活指数
+                        viewModel.lifestyle(id);
                     }
                 }
             });
@@ -118,6 +129,17 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     }
                     dailyBeanList.addAll(daily);
                     dailyAdapter.notifyDataSetChanged();
+                }
+            });
+            //生活指数返回
+            viewModel.lifestyleResponseMutableLiveData.observe(this, lifestyleResponse -> {
+                List<LifestyleResponse.DailyBean> daily = lifestyleResponse.getDaily();
+                if (daily != null) {
+                    if (lifestyleList.size() > 0) {
+                        lifestyleList.clear();
+                    }
+                    lifestyleList.addAll(daily);
+                    lifestyleAdapter.notifyDataSetChanged();
                 }
             });
             //错误信息返回
