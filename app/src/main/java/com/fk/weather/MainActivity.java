@@ -6,10 +6,14 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.baidu.location.BDLocation;
+import com.fk.weather.utils.EasyDate;
 import com.baidu.location.LocationClient;
+import com.fk.weather.bean.DailyResponse;
+import com.fk.weather.adapter.DailyAdapter;
 import com.baidu.location.LocationClientOption;
 import com.fk.weather.bean.NowResponse;
 import com.fk.weather.bean.SearchCityResponse;
@@ -19,6 +23,7 @@ import com.fk.weather.location.MyLocationListener;
 import com.fk.weather.viewmodel.MainViewModel;
 import com.fk.library.base.NetworkActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends NetworkActivity<ActivityMainBinding> implements LocationCallback {
@@ -32,6 +37,10 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     private final MyLocationListener myListener = new MyLocationListener();
 
     private MainViewModel viewModel;
+
+    //天气预报数据和适配器
+    private final List<DailyResponse.DailyBean> dailyBeanList = new ArrayList<>();
+    private final DailyAdapter dailyAdapter = new DailyAdapter(dailyBeanList);
 
     /**
      * 注册意图
@@ -57,10 +66,18 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         setFullScreenImmersion();
         initLocation();
         requestPermission();
+        initView();
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
 
-
+    /**
+     * 初始化未来天气页面视图
+     */
+    private void initView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.setAdapter(dailyAdapter);
+    }
 
     /**
      * 数据观察
@@ -77,6 +94,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     if (id != null) {
                         //通过城市ID查询城市实时天气
                         viewModel.nowWeather(id);
+                        //通过城市ID查询天气预报
+                        viewModel.dailyWeather(id);
                     }
                 }
             });
@@ -84,9 +103,21 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             viewModel.nowResponseMutableLiveData.observe(this, nowResponse -> {
                 NowResponse.NowBean now = nowResponse.getNow();
                 if (now != null) {
-                    binding.tvInfo.setText(now.getText());
+                    binding.tvText.setText(now.getText());
                     binding.tvTemp.setText(now.getTemp());
-                    binding.tvUpdateTime.setText("最近更新时间：" + nowResponse.getUpdateTime());
+                    binding.tvUpdateTime.setText
+                            ("最近更新时间：" + EasyDate.greenwichupToSimpleTime(nowResponse.getUpdateTime()));
+                }
+            });
+            //天气预报返回
+            viewModel.dailyResponseMutableLiveData.observe(this, dailyResponse -> {
+                List<DailyResponse.DailyBean> daily = dailyResponse.getDaily();
+                if (daily != null) {
+                    if (dailyBeanList.size() > 0) {
+                        dailyBeanList.clear();
+                    }
+                    dailyBeanList.addAll(daily);
+                    dailyAdapter.notifyDataSetChanged();
                 }
             });
             //错误信息返回
@@ -108,7 +139,6 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         //开始定位
         startLocation();
     }
-
 
     /**
      * 初始化定位
@@ -149,23 +179,11 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      */
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-        double latitude = bdLocation.getLatitude();    //获取纬度信息
-        double longitude = bdLocation.getLongitude();    //获取经度信息
-        float radius = bdLocation.getRadius();    //获取定位精度，默认值为0.0f
-        String coorType = bdLocation.getCoorType();
-        //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
-        int errorCode = bdLocation.getLocType();//161  表示网络定位结果
-        //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
-        String addr = bdLocation.getAddrStr();    //获取详细地址信息
-        String country = bdLocation.getCountry();    //获取国家
-        String province = bdLocation.getProvince();    //获取省份
-        String city = bdLocation.getCity();    //获取城市
-        String district = bdLocation.getDistrict();    //获取区县
-        String street = bdLocation.getStreet();    //获取街道信息
-        String locationDescribe = bdLocation.getLocationDescribe();    //获取位置描述信息
-        binding.tvCityName.setText(addr);//设置文本显示
-
+        String city = bdLocation.getCity();             //获取城市
+        String district = bdLocation.getDistrict();     //获取区县
         if (viewModel != null && district != null) {
+            //显示当前定位城市
+            binding.tvCityName.setText(district);
             //搜索城市
             viewModel.searchCity(district);
         } else {
