@@ -2,10 +2,16 @@ package com.fk.weather;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -80,12 +86,44 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      * 初始化
      */
     private void initView() {
+        setToolbarMoreIconCustom(binding.materialToolbar);
         LinearLayoutManager layoutManager = new LinearLayoutManager
                 (this, LinearLayoutManager.HORIZONTAL, false);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(dailyAdapter);
         binding.rvLifestyle.setLayoutManager(new LinearLayoutManager(this));
         binding.rvLifestyle.setAdapter(lifestyleAdapter);
+    }
+
+    /**
+     * 创建菜单
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.popup_menu, menu);
+        return true;
+    }
+
+    /**
+     * 菜单选项选中
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.item_switching_cities) {
+            showMsg("切换城市");
+        }
+        return true;
+    }
+
+    /**
+     * 自定义Toolbar的图标
+     */
+    public void setToolbarMoreIconCustom(Toolbar toolbar) {
+        if (toolbar == null) return;
+        toolbar.setTitle("");
+        Drawable moreIcon = ContextCompat.getDrawable(toolbar.getContext(), R.drawable.ic_baseline_more_vert_24);
+        if (moreIcon != null) toolbar.setOverflowIcon(moreIcon);
+        setSupportActionBar(toolbar);
     }
 
     /**
@@ -114,7 +152,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             viewModel.nowResponseMutableLiveData.observe(this, nowResponse -> {
                 NowResponse.NowBean now = nowResponse.getNow();
                 if (now != null) {
-                    binding.tvText.setText(now.getText());
+                    binding.tvText.setText("天气：    " + now.getText());
+                    binding.tvWindDirection.setText("风向：    " + now.getWindDir());//风向
                     binding.tvTemp.setText(now.getTemp());
                     binding.tvUpdateTime.setText
                             ("最近更新时间：" + EasyDate.greenwichupToSimpleTime(nowResponse.getUpdateTime()));

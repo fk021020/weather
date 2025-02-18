@@ -10,35 +10,24 @@
     tools:context=".MainActivity">
 
 
-    <androidx.appcompat.widget.Toolbar
+    <!--顶部标题-->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="天气APP"
-        app:titleTextColor="@color/white">
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right">
-
-            <ImageView
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/ic_baseline_search_24" />
-
-            <ImageView
-                android:id="@+id/btn_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/ic_baseline_more_vert_24" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </androidx.appcompat.widget.Toolbar>
+            android:layout_gravity="center"
+            android:text="城市天气"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
 
     <androidx.core.widget.NestedScrollView
@@ -117,14 +106,29 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_text"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="多云 |  南风"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="天气："
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_wind_direction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="风向："
+                        android:textSize="16sp" />
+                </LinearLayout>
 
                 <!--上一次更新时间-->
                 <TextView
