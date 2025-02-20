@@ -16,12 +16,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.baidu.location.BDLocation;
 import com.fk.weather.R;
 import com.fk.weather.Constant;
 import com.fk.weather.utils.MVUtils;
 import com.fk.weather.utils.GlideUtils;
+import com.fk.weather.db.bean.HourlyResponse;
+import com.fk.weather.ui.adapter.HourlyAdapter;
 import com.fk.weather.location.GoodLocation;
 import com.fk.weather.utils.EasyDate;
 import com.baidu.location.LocationClient;
@@ -58,6 +61,10 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     //生活指数数据和适配器
     private final List<LifestyleResponse.DailyBean> lifestyleList = new ArrayList<>();
     private final LifestyleAdapter lifestyleAdapter = new LifestyleAdapter(lifestyleList);
+
+    //逐小时天气预报数据和适配器
+    private final List<HourlyResponse.HourlyBean> hourlyBeanList = new ArrayList<>();
+    private final HourlyAdapter hourlyAdapter = new HourlyAdapter(hourlyBeanList);
 
     //城市弹窗
     private CityDialog cityDialog;
@@ -133,6 +140,11 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         //垂直方向生活指数列表
         binding.rvLifestyle.setLayoutManager(new LinearLayoutManager(this));
         binding.rvLifestyle.setAdapter(lifestyleAdapter);
+        //逐小时天气预报列表
+        LinearLayoutManager hourlyLayoutManager = new LinearLayoutManager(this);
+        hourlyLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        binding.rvHourly.setLayoutManager(hourlyLayoutManager);
+        binding.rvHourly.setAdapter(hourlyAdapter);
         //下拉刷新监听
         binding.layRefresh.setOnRefreshListener(() -> {
             if (mCityName == null) {
@@ -256,6 +268,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                         viewModel.dailyWeather(id);
                         //通过城市ID查询生活指数
                         viewModel.lifestyle(id);
+                        //通过城市ID查询逐小时天气预报
+                        viewModel.hourlyWeather(id);
                     }
                 }
             });
@@ -266,8 +280,10 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     binding.tvText.setText("天气：    " + now.getText());
                     binding.tvWindDirection.setText("风向：    " + now.getWindDir());//风向
                     binding.tvTemp.setText(now.getTemp());
-                    binding.tvUpdateTime.setText
-                            ("最近更新时间：" + EasyDate.greenwichupToSimpleTime(nowResponse.getUpdateTime()));
+                    //精简更新时间
+                    String time = EasyDate.updateTime(nowResponse.getUpdateTime());
+                    binding.tvUpdateTime.setText(String.format
+                            ("最近更新时间：%s%s", EasyDate.showTimeInfo(time), time));
                 }
             });
             //天气预报返回
@@ -279,6 +295,9 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     }
                     dailyBeanList.addAll(daily);
                     dailyAdapter.notifyDataSetChanged();
+                    //设置当天最高温和最低温
+                    binding.tvHeight.setText(String.format("%s℃", daily.get(0).getTempMax()));
+                    binding.tvLow.setText(String.format(" / %s℃", daily.get(0).getTempMin()));
                 }
             });
             //生活指数返回
@@ -297,6 +316,17 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                 //城市弹窗初始化
                 cityDialog = CityDialog.getInstance(MainActivity.this, provinces);
                 cityDialog.setSelectedCityCallback(this);
+            });
+            //逐小时天气预报
+            viewModel.hourlyResponseMutableLiveData.observe(this, hourlyResponse -> {
+                List<HourlyResponse.HourlyBean> hourly = hourlyResponse.getHourly();
+                if (hourly != null) {
+                    if (hourlyBeanList.size() > 0) {
+                        hourlyBeanList.clear();
+                    }
+                    hourlyBeanList.addAll(hourly);
+                    hourlyAdapter.notifyDataSetChanged();
+                }
             });
             //错误信息返回
             viewModel.failed.observe(this, this::showLongMsg);

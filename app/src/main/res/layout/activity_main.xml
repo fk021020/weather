@@ -15,13 +15,18 @@
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:text="城市天气"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16" />
@@ -31,17 +36,18 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/lay_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
 
         <!--滚动视图-->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/lay_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <!--滑动距离布局-->
+            <!--页面主要内容视图-->
             <androidx.appcompat.widget.LinearLayoutCompat
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -55,8 +61,10 @@
                     android:layout_marginTop="@dimen/dp_8"
                     android:text="天气状况"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18" />
-
+                    android:textSize="@dimen/sp_18"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <!--滑动距离布局-->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/lay_scroll_height"
                     android:layout_width="match_parent"
@@ -64,7 +72,7 @@
                     android:layout_marginTop="30dp"
                     android:gravity="center"
                     android:orientation="vertical">
-
+                    <!--城市-->
                     <TextView
                         android:id="@+id/tv_city_name"
                         android:layout_width="wrap_content"
@@ -75,11 +83,11 @@
                         android:text="北京 "
                         android:textColor="@color/white"
                         android:textSize="24sp" />
-
+                    <!--温度-->
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
+                        <!--温度-->
                         <TextView
                             android:id="@+id/tv_temp"
                             android:layout_width="wrap_content"
@@ -89,7 +97,7 @@
                             android:text="25"
                             android:textColor="@color/white"
                             android:textSize="100sp" />
-
+                        <!--摄氏度符号-->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -99,7 +107,7 @@
                             android:text="°C"
                             android:textColor="@color/white"
                             android:textSize="20sp" />
-
+                        <!--语音-->
                         <ImageView
                             android:id="@+id/btn_speak"
                             android:layout_width="wrap_content"
@@ -109,6 +117,32 @@
                             android:src="@drawable/ic_baseline_volume_up_24" />
                     </RelativeLayout>
 
+                    <!--当天最高温和最低温-->
+                    <LinearLayout
+                        android:id="@+id/lay_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_temp"
+                        app:layout_constraintStart_toStartOf="@+id/tv_temp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_temp">
+                        <!--最高温-->
+                        <TextView
+                            android:id="@+id/tv_height"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+                        <!--最低温-->
+                        <TextView
+                            android:id="@+id/tv_low"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/temp_min_tx"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <!--天气风向-->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -133,15 +167,48 @@
                             android:textSize="16sp" />
                     </LinearLayout>
 
-                    <!--上一次更新时间-->
-                    <TextView
-                        android:id="@+id/tv_update_time"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <!--App名称-->
+                        <TextView
+                            android:id="@+id/tv_app_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:drawableStart="@mipmap/icon_weather_sun"
+                            android:drawablePadding="@dimen/dp_4"
+                            android:text="Weather"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"/>
+
+                        <!--上一次更新时间-->
+                        <TextView
+                            android:id="@+id/tv_update_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:text="最近更新时间："
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"/>
+
+                    </LinearLayout>
+
+                    <!--分隔线 增加UI效果-->
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:layout_marginStart="@dimen/dp_16"
                         android:layout_marginTop="@dimen/dp_8"
-                        android:text="上次更新时间："
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_marginEnd="@dimen/dp_16"
+                        android:alpha="0.1"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_app_name" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -309,11 +376,19 @@
                         android:textSize="17sp" />
                 </RelativeLayout>
 
+                <!--逐小时天气预报列表-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_hourly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <!--天气预报列表-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <!--空气质量-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -518,7 +593,7 @@
                         </androidx.appcompat.widget.LinearLayoutCompat>
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
-
+                <!--生活建议-->
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
@@ -530,7 +605,7 @@
                     android:text="生活建议"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_18" />
-
+                <!--生活建议列表-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_lifestyle"
                     android:layout_width="match_parent"

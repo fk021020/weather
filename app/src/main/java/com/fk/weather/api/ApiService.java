@@ -4,6 +4,7 @@ import static com.fk.weather.Constant.API_KEY;
 
 import com.fk.weather.db.bean.BingResponse;
 import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.db.bean.NowResponse;
 import com.fk.weather.db.bean.LifestyleResponse;
 import com.fk.weather.db.bean.SearchCityResponse;
@@ -66,4 +67,12 @@ public interface ApiService {
     @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
     Observable<BingResponse> bing();
 
+    /**
+     * 逐小时预报（未来24小时）之前是逐三小时预报
+     *
+     * @param location 城市id
+     * @return 返回逐小时数据 HourlyResponse
+     */
+    @GET("/v7/weather/24h?key=" + API_KEY)
+    Observable<HourlyResponse> hourlyWeather(@Query("location") String location);
 }

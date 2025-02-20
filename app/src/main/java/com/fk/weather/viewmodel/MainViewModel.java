@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.fk.weather.db.bean.DailyResponse;
 import com.fk.weather.db.bean.NowResponse;
+import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.db.bean.Province;
 import com.fk.weather.db.bean.SearchCityResponse;
 import com.fk.weather.db.bean.LifestyleResponse;
@@ -30,6 +31,8 @@ public class MainViewModel extends BaseViewModel {
     public MutableLiveData<LifestyleResponse> lifestyleResponseMutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<List<Province>> cityMutableLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<HourlyResponse> hourlyResponseMutableLiveData = new MutableLiveData<>();
 
     /**
      * 搜索城市
@@ -72,5 +75,14 @@ public class MainViewModel extends BaseViewModel {
      */
     public void getAllCity() {
         CityRepository.getInstance().getCityData(cityMutableLiveData);
+    }
+
+    /**
+     * 逐小时天气预报
+     *
+     * @param cityId 城市ID
+     */
+    public void hourlyWeather(String cityId) {
+        WeatherRepository.getInstance().hourlyWeather(hourlyResponseMutableLiveData, failed, cityId);
     }
 }

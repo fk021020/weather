@@ -9,6 +9,7 @@ import com.fk.weather.Constant;
 import com.fk.weather.api.ApiService;
 import com.fk.weather.db.bean.LifestyleResponse;
 import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.db.bean.NowResponse;
 import com.fk.library.network.ApiType;
 import com.fk.library.network.NetworkApi;
@@ -122,6 +123,40 @@ public class WeatherRepository {
                             responseLiveData.postValue(lifestyleResponse);
                         } else {
                             failed.postValue(type + lifestyleResponse.getCode());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        Log.e(TAG, "onFailure: " + e.getMessage());
+                        failed.postValue(type + e.getMessage());
+                    }
+                }));
+    }
+
+    /**
+     * 逐小时天气预报
+     *
+     * @param responseLiveData 成功数据
+     * @param failed           错误信息
+     * @param cityId           城市ID
+     */
+    public void hourlyWeather(MutableLiveData<HourlyResponse> responseLiveData,
+                              MutableLiveData<String> failed, String cityId) {
+        String type = "逐小时天气预报-->";
+        NetworkApi.createService(ApiService.class, ApiType.WEATHER).hourlyWeather(cityId)
+                .compose(NetworkApi.applySchedulers(new BaseObserver<>() {
+                    @Override
+                    public void onSuccess(HourlyResponse hourlyResponse) {
+                        if (hourlyResponse == null) {
+                            failed.postValue("逐小时天气预报数据为null，请检查城市ID是否正确。");
+                            return;
+                        }
+                        //请求接口成功返回数据，失败返回状态码
+                        if (Constant.SUCCESS.equals(hourlyResponse.getCode())) {
+                            responseLiveData.postValue(hourlyResponse);
+                        } else {
+                            failed.postValue(type + hourlyResponse.getCode());
                         }
                     }
 
