@@ -1,4 +1,4 @@
-package com.fk.weather;
+package com.fk.weather.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -16,15 +16,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.baidu.location.BDLocation;
+import com.fk.weather.R;
 import com.fk.weather.utils.EasyDate;
 import com.baidu.location.LocationClient;
-import com.fk.weather.bean.DailyResponse;
-import com.fk.weather.adapter.DailyAdapter;
-import com.fk.weather.adapter.LifestyleAdapter;
+import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.ui.adapter.DailyAdapter;
+import com.fk.weather.ui.adapter.LifestyleAdapter;
 import com.baidu.location.LocationClientOption;
-import com.fk.weather.bean.NowResponse;
-import com.fk.weather.bean.LifestyleResponse;
-import com.fk.weather.bean.SearchCityResponse;
+import com.fk.weather.db.bean.NowResponse;
+import com.fk.weather.db.bean.LifestyleResponse;
+import com.fk.weather.utils.CityDialog;
+import com.fk.weather.db.bean.SearchCityResponse;
 import com.fk.weather.databinding.ActivityMainBinding;
 import com.fk.weather.location.LocationCallback;
 import com.fk.weather.location.MyLocationListener;
@@ -34,7 +36,7 @@ import com.fk.library.base.NetworkActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends NetworkActivity<ActivityMainBinding> implements LocationCallback {
+public class MainActivity extends NetworkActivity<ActivityMainBinding> implements LocationCallback, CityDialog.SelectedCityCallback {
 
     //权限数组
     private final String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -53,6 +55,9 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     //生活指数数据和适配器
     private final List<LifestyleResponse.DailyBean> lifestyleList = new ArrayList<>();
     private final LifestyleAdapter lifestyleAdapter = new LifestyleAdapter(lifestyleList);
+
+    //城市弹窗
+    private CityDialog cityDialog;
 
     /**
      * 注册意图
@@ -75,11 +80,18 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      */
     @Override
     protected void onCreate() {
+        //沉浸式
         setFullScreenImmersion();
+        //初始化定位
         initLocation();
+        //请求权限
         requestPermission();
+        //初始化视图
         initView();
+        //绑定ViewModel
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        //获取城市数据
+        viewModel.getAllCity();
     }
 
     /**
@@ -110,7 +122,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.item_switching_cities) {
-            showMsg("切换城市");
+            if (cityDialog != null) cityDialog.show();
         }
         return true;
     }
@@ -180,6 +192,12 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     lifestyleList.addAll(daily);
                     lifestyleAdapter.notifyDataSetChanged();
                 }
+            });
+            //获取本地城市数据返回
+            viewModel.cityMutableLiveData.observe(this, provinces -> {
+                //城市弹窗初始化
+                cityDialog = CityDialog.getInstance(MainActivity.this, provinces);
+                cityDialog.setSelectedCityCallback(this);
             });
             //错误信息返回
             viewModel.failed.observe(this, this::showLongMsg);
@@ -252,4 +270,16 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         }
     }
 
+    /**
+     * 选中城市
+     *
+     * @param cityName 城市名称
+     */
+    @Override
+    public void selectedCity(String cityName) {
+        //搜索城市
+        viewModel.searchCity(cityName);
+        //显示所选城市
+        binding.tvCityName.setText(cityName);
+    }
 }

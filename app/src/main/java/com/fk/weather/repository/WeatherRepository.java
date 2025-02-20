@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.fk.weather.Constant;
 import com.fk.weather.api.ApiService;
-import com.fk.weather.bean.LifestyleResponse;
-import com.fk.weather.bean.DailyResponse;
-import com.fk.weather.bean.NowResponse;
+import com.fk.weather.db.bean.LifestyleResponse;
+import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.db.bean.NowResponse;
 import com.fk.library.network.ApiType;
 import com.fk.library.network.NetworkApi;
 import com.fk.library.network.observer.BaseObserver;

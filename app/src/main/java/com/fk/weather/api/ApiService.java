@@ -2,10 +2,10 @@ package com.fk.weather.api;
 
 import static com.fk.weather.Constant.API_KEY;
 
-import com.fk.weather.bean.DailyResponse;
-import com.fk.weather.bean.NowResponse;
-import com.fk.weather.bean.LifestyleResponse;
-import com.fk.weather.bean.SearchCityResponse;
+import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.db.bean.NowResponse;
+import com.fk.weather.db.bean.LifestyleResponse;
+import com.fk.weather.db.bean.SearchCityResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

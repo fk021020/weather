@@ -2,17 +2,22 @@ package com.fk.weather.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.fk.weather.bean.DailyResponse;
-import com.fk.weather.bean.NowResponse;
-import com.fk.weather.bean.SearchCityResponse;
-import com.fk.weather.bean.LifestyleResponse;
+import com.fk.weather.db.bean.DailyResponse;
+import com.fk.weather.db.bean.NowResponse;
+import com.fk.weather.db.bean.Province;
+import com.fk.weather.db.bean.SearchCityResponse;
+import com.fk.weather.db.bean.LifestyleResponse;
 import com.fk.weather.repository.SearchCityRepository;
+import com.fk.weather.repository.CityRepository;
 import com.fk.library.base.BaseViewModel;
 import com.fk.weather.repository.WeatherRepository;
+import com.fk.weather.ui.MainActivity;
+
+import java.util.List;
 
 /**
  * 主页面ViewModel
- * {@link com.fk.weather.MainActivity}
+ * {@link com.fk.weather.ui.MainActivity}
  */
 public class MainViewModel extends BaseViewModel {
 
@@ -23,6 +28,8 @@ public class MainViewModel extends BaseViewModel {
     public MutableLiveData<DailyResponse> dailyResponseMutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<LifestyleResponse> lifestyleResponseMutableLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<List<Province>> cityMutableLiveData = new MutableLiveData<>();
 
     /**
      * 搜索城市
@@ -58,5 +65,12 @@ public class MainViewModel extends BaseViewModel {
      */
     public void lifestyle(String cityId) {
         WeatherRepository.getInstance().lifestyle(lifestyleResponseMutableLiveData, failed, cityId);
+    }
+
+    /**
+     * 获取行政区数据
+     */
+    public void getAllCity() {
+        CityRepository.getInstance().getCityData(cityMutableLiveData);
     }
 }
