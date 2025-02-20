@@ -2,7 +2,9 @@ package com.fk.weather.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.fk.weather.db.bean.BingResponse;
 import com.fk.weather.db.bean.Province;
+import com.fk.weather.repository.BingRepository;
 import com.fk.weather.repository.CityRepository;
 import com.fk.library.base.BaseViewModel;
 
@@ -16,6 +18,8 @@ public class SplashViewModel extends BaseViewModel {
 
     public MutableLiveData<List<Province>> listMutableLiveData = new MutableLiveData<>();
 
+    public MutableLiveData<BingResponse> bingResponseMutableLiveData = new MutableLiveData<>();
+
     /**
      * 添加城市数据
      */
@@ -28,6 +32,13 @@ public class SplashViewModel extends BaseViewModel {
      */
     public void getAllCityData() {
         CityRepository.getInstance().getCityData(listMutableLiveData);
+    }
+
+    /**
+     * 必应壁纸
+     */
+    public void bing() {
+        BingRepository.getInstance().bing(bingResponseMutableLiveData, failed);
     }
 }
 

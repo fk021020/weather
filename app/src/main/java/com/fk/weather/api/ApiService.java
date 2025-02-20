@@ -2,6 +2,7 @@ package com.fk.weather.api;
 
 import static com.fk.weather.Constant.API_KEY;
 
+import com.fk.weather.db.bean.BingResponse;
 import com.fk.weather.db.bean.DailyResponse;
 import com.fk.weather.db.bean.NowResponse;
 import com.fk.weather.db.bean.LifestyleResponse;
@@ -56,5 +57,13 @@ public interface ApiService {
      */
     @GET("/v7/indices/1d?key=" + API_KEY)
     Observable<LifestyleResponse> lifestyle(@Query("type") String type, @Query("location") String location);
+
+    /**
+     * 必应每日一图
+     *
+     * @return BiYingImgResponse 必应壁纸返回
+     */
+    @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
+    Observable<BingResponse> bing();
 
 }

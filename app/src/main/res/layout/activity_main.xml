@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/weather_bg"
     android:orientation="vertical"
+    android:id="@+id/lay_root"
     android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
