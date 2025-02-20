@@ -10,18 +10,15 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
-
     <!--顶部标题-->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:fitsSystemWindows="true">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,575 +27,535 @@
             android:textSize="@dimen/sp_16" />
     </com.google.android.material.appbar.MaterialToolbar>
 
-
-    <androidx.core.widget.NestedScrollView
+    <!--下拉刷新视图-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/lay_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <!--滚动视图-->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/lay_scroll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:text="天气状况"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_18"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
-
+            <!--滑动距离布局-->
             <androidx.appcompat.widget.LinearLayoutCompat
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
                 android:orientation="vertical">
 
+                <!--天气状况-->
                 <TextView
-                    android:id="@+id/tv_city_name"
+                    android:id="@+id/tv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:drawableRight="@drawable/ic_baseline_location_on_24"
-                    android:gravity="center"
-                    android:text="北京 "
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_temp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:text="25"
-                        android:textColor="@color/white"
-                        android:textSize="100sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_toRightOf="@id/tv_temp"
-                        android:gravity="center"
-                        android:text="°C"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-
-                    <ImageView
-                        android:id="@+id/btn_speak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="90dp"
-                        android:layout_toRightOf="@id/tv_temp"
-                        android:src="@drawable/ic_baseline_volume_up_24" />
-
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="天气："
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tv_wind_direction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="风向："
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <!--上一次更新时间-->
-                <TextView
-                    android:id="@+id/tv_update_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="上次更新时间："
+                    android:text="天气状况"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_city"
-                    app:layout_constraintStart_toStartOf="@+id/tv_city"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_city" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:textSize="@dimen/sp_18" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/lay_scroll_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="湿度"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_humidity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 %"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="气压"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_pressure"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 hPa"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="能见度"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_vis"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 km"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="20dp">
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="风向"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_windDir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="东南风"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="风速"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_windSpeed"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 km/h"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="风力"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:id="@+id/tv_windScale"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 级"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="未来七天"
-                    android:textColor="@color/white"
-                    android:textSize="17sp" />
-            </RelativeLayout>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="空气质量"
-                    android:textColor="@color/white"
-                    android:textSize="17sp" />
-            </RelativeLayout>
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="#20000000"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="0dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="16dp">
-
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <TextView
+                        android:id="@+id/tv_city_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
+                        android:layout_marginLeft="16dp"
+                        android:drawableRight="@drawable/ic_baseline_location_on_24"
+                        android:gravity="center"
+                        android:text="北京 "
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/tv_temp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="污染指数"
-                            android:textColor="@color/white" />
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="25"
+                            android:textColor="@color/white"
+                            android:textSize="100sp" />
 
                         <TextView
-                            android:id="@+id/tv_category"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:text="良"
-                            android:textColor="@color/white" />
+                            android:layout_toRightOf="@id/tv_temp"
+                            android:gravity="center"
+                            android:text="°C"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/btn_speak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="90dp"
+                            android:layout_toRightOf="@id/tv_temp"
+                            android:src="@drawable/ic_baseline_volume_up_24" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <TextView
-                            android:id="@+id/tv_aqi"
+                            android:id="@+id/tv_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:gravity="center"
+                            android:text="天气："
                             android:textColor="@color/white"
-                            android:textSize="40sp" />
+                            android:textSize="16sp" />
 
+                        <TextView
+                            android:id="@+id/tv_wind_direction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="风向："
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <!--上一次更新时间-->
+                    <TextView
+                        android:id="@+id/tv_update_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:text="上次更新时间："
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:orientation="vertical">
+                        android:layout_marginTop="20dp">
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="PM10"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
+                                android:text="湿度"
+                                android:textColor="@color/white" />
 
                             <TextView
-                                android:id="@+id/tv_pm10"
+                                android:id="@+id/tv_humidity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
+                                android:text="0 %"
                                 android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="PM2.5"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
+                                android:text="气压"
+                                android:textColor="@color/white" />
 
                             <TextView
-                                android:id="@+id/tv_pm2p5"
+                                android:id="@+id/tv_pressure"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
+                                android:text="0 hPa"
                                 android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp">
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="NO2"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
+                                android:text="能见度"
+                                android:textColor="@color/white" />
 
                             <TextView
-                                android:id="@+id/tv_no2"
+                                android:id="@+id/tv_vis"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
+                                android:text="0 km"
                                 android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SO2"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/tv_so2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
-                                android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="O3"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/tv_o3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
-                                android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:text="CO"
-                                android:textColor="#D7D1D1"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/tv_co"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:text="0"
-                                android:textColor="@color/white"
-                                android:textSize="10sp" />
-                        </RelativeLayout>
-
-
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="20dp">
 
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="风向"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/tv_windDir"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="东南风"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="风速"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/tv_windSpeed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 km/h"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="风力"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/tv_windScale"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 级"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="未来七天"
+                        android:textColor="@color/white"
+                        android:textSize="17sp" />
                 </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_16"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="生活建议"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_18" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_lifestyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingStart="@dimen/dp_16"
-                android:paddingEnd="@dimen/dp_16"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="40dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="0dp">
-
-                <ImageView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/img_banner" />
+                    android:layout_height="wrap_content" />
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp">
 
-            </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="空气质量"
+                        android:textColor="@color/white"
+                        android:textSize="17sp" />
+                </RelativeLayout>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="#20000000"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="16dp">
 
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="污染指数"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/tv_category"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:text="良"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:id="@+id/tv_aqi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/white"
+                                android:textSize="40sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="PM10"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_pm10"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="PM2.5"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_pm2p5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="NO2"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_no2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="SO2"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_so2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="O3"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+                                <TextView
+                                    android:id="@+id/tv_o3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="CO"
+                                    android:textColor="#D7D1D1"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_co"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="0"
+                                    android:textColor="@color/white"
+                                    android:textSize="10sp" />
+                            </RelativeLayout>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="生活建议"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_18" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_lifestyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="@dimen/dp_16"
+                    android:paddingEnd="@dimen/dp_16" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="40dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/img_banner" />
+                </androidx.cardview.widget.CardView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
