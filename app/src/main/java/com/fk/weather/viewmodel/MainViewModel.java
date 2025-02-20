@@ -2,6 +2,7 @@ package com.fk.weather.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.fk.weather.db.bean.AirResponse;
 import com.fk.weather.db.bean.DailyResponse;
 import com.fk.weather.db.bean.NowResponse;
 import com.fk.weather.db.bean.HourlyResponse;
@@ -33,6 +34,8 @@ public class MainViewModel extends BaseViewModel {
     public MutableLiveData<List<Province>> cityMutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<HourlyResponse> hourlyResponseMutableLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<AirResponse> airResponseMutableLiveData = new MutableLiveData<>();
 
     /**
      * 搜索城市
@@ -84,5 +87,14 @@ public class MainViewModel extends BaseViewModel {
      */
     public void hourlyWeather(String cityId) {
         WeatherRepository.getInstance().hourlyWeather(hourlyResponseMutableLiveData, failed, cityId);
+    }
+
+    /**
+     * 空气质量
+     *
+     * @param cityId 城市ID
+     */
+    public void airWeather(String cityId) {
+        WeatherRepository.getInstance().airWeather(airResponseMutableLiveData, failed, cityId);
     }
 }

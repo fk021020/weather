@@ -23,6 +23,7 @@ import com.fk.weather.R;
 import com.fk.weather.Constant;
 import com.fk.weather.utils.MVUtils;
 import com.fk.weather.utils.GlideUtils;
+import com.fk.weather.db.bean.AirResponse;
 import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.ui.adapter.HourlyAdapter;
 import com.fk.weather.location.GoodLocation;
@@ -270,6 +271,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                         viewModel.lifestyle(id);
                         //通过城市ID查询逐小时天气预报
                         viewModel.hourlyWeather(id);
+                        //通过城市ID查询空气质量
+                        viewModel.airWeather(id);
                     }
                 }
             });
@@ -277,6 +280,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             viewModel.nowResponseMutableLiveData.observe(this, nowResponse -> {
                 NowResponse.NowBean now = nowResponse.getNow();
                 if (now != null) {
+                    binding.tvWeek.setText(EasyDate.getTodayOfWeek());//星期
+                    binding.tvWeatherInfo.setText(now.getText());
                     binding.tvText.setText("天气：    " + now.getText());
                     binding.tvWindDirection.setText("风向：    " + now.getWindDir());//风向
                     binding.tvTemp.setText(now.getTemp());
@@ -327,6 +332,34 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     hourlyBeanList.addAll(hourly);
                     hourlyAdapter.notifyDataSetChanged();
                 }
+            });
+            //空气质量返回
+            viewModel.airResponseMutableLiveData.observe(this, airResponse -> {
+                AirResponse.NowBean now = airResponse.getNow();
+                if (now == null) return;
+                binding.rpbAqi.setMaxProgress(300);//最大进度，用于计算
+                binding.rpbAqi.setMinText("0");//设置显示最小值
+                binding.rpbAqi.setMinTextSize(32f);
+                binding.rpbAqi.setMaxText("300");//设置显示最大值
+                binding.rpbAqi.setMaxTextSize(32f);
+                binding.rpbAqi.setProgress(Float.parseFloat(now.getAqi()));//当前进度
+                binding.rpbAqi.setArcBgColor(getColor(R.color.arc_bg_color));//圆弧的颜色
+                binding.rpbAqi.setProgressColor(getColor(R.color.arc_progress_color));//进度圆弧的颜色
+                binding.rpbAqi.setFirstText(now.getCategory());//空气质量描述 取值范围：优，良，轻度污染，中度污染，重度污染，严重污染
+                binding.rpbAqi.setFirstTextSize(44f);//第一行文本的字体大小
+                binding.rpbAqi.setSecondText(now.getAqi());//空气质量值
+                binding.rpbAqi.setSecondTextSize(64f);//第二行文本的字体大小
+                binding.rpbAqi.setMinText("0");
+                binding.rpbAqi.setMinTextColor(getColor(R.color.arc_progress_color));
+
+                binding.tvAirInfo.setText(String.format("空气%s", now.getCategory()));
+
+                binding.tvPm10.setText(now.getPm10());//PM10
+                binding.tvPm25.setText(now.getPm2p5());//PM2.5
+                binding.tvNo2.setText(now.getNo2());//二氧化氮
+                binding.tvSo2.setText(now.getSo2());//二氧化硫
+                binding.tvO3.setText(now.getO3());//臭氧
+                binding.tvCo.setText(now.getCo());//一氧化碳
             });
             //错误信息返回
             viewModel.failed.observe(this, this::showLongMsg);

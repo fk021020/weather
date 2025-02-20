@@ -2,6 +2,7 @@ package com.fk.weather.api;
 
 import static com.fk.weather.Constant.API_KEY;
 
+import com.fk.weather.db.bean.AirResponse;
 import com.fk.weather.db.bean.BingResponse;
 import com.fk.weather.db.bean.DailyResponse;
 import com.fk.weather.db.bean.HourlyResponse;
@@ -75,4 +76,13 @@ public interface ApiService {
      */
     @GET("/v7/weather/24h?key=" + API_KEY)
     Observable<HourlyResponse> hourlyWeather(@Query("location") String location);
+
+    /**
+     * 当天空气质量
+     *
+     * @param location 城市id
+     * @return 返回当天空气质量数据 AirResponse
+     */
+    @GET("/v7/air/now?key=" + API_KEY)
+    Observable<AirResponse> airWeather(@Query("location") String location);
 }
