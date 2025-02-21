@@ -374,6 +374,12 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     String time = EasyDate.updateTime(nowResponse.getUpdateTime());
                     binding.tvUpdateTime.setText(String.format
                             ("最近更新时间：%s%s", EasyDate.showTimeInfo(time), time));
+                    binding.tvHum.setText(now.getHumidity() + " %");
+                    binding.tvVisTitle.setText(now.getVis() + "km");
+                    binding.tvPres.setText(now.getPressure() + " hPa");
+                    binding.tvWindDir.setText(now.getWindDir());
+                    binding.tvWindSpd.setText(now.getWindSpeed() + " km/h");
+                    binding.tvWindSc.setText(now.getWindScale() + " 级");
                 }
             });
             //天气预报返回
@@ -388,6 +394,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     //设置当天最高温和最低温
                     binding.tvHeight.setText(String.format("%s℃", daily.get(0).getTempMax()));
                     binding.tvLow.setText(String.format(" / %s℃", daily.get(0).getTempMin()));
+
+
                 }
             });
             //生活指数返回
@@ -516,4 +524,5 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         //显示所选城市
         binding.tvCityName.setText(cityName);
     }
+
 }
