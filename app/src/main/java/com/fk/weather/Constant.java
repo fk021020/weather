@@ -44,4 +44,14 @@ public class Constant {
      * 必应图片地址
      */
     public static final String BING_URL = "bingUrl";
+
+    /**
+     * 当前定位城市
+     */
+    public static final String LOCATION_CITY = "locationCity";
+
+    /**
+     * 页面返回城市结果
+     */
+    public static final String CITY_RESULT = "cityResult";
 }

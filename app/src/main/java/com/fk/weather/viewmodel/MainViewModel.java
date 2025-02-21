@@ -9,6 +9,7 @@ import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.db.bean.Province;
 import com.fk.weather.db.bean.SearchCityResponse;
 import com.fk.weather.db.bean.LifestyleResponse;
+import com.fk.weather.db.bean.MyCity;
 import com.fk.weather.repository.SearchCityRepository;
 import com.fk.weather.repository.CityRepository;
 import com.fk.library.base.BaseViewModel;
@@ -96,5 +97,13 @@ public class MainViewModel extends BaseViewModel {
      */
     public void airWeather(String cityId) {
         WeatherRepository.getInstance().airWeather(airResponseMutableLiveData, failed, cityId);
+    }
+
+    /**
+     * 添加我的城市数据，在定位之后添加数据
+     */
+    public void addMyCityData(String cityName) {
+        MyCity myCity = new MyCity(cityName);
+        CityRepository.getInstance().addMyCityData(myCity);
     }
 }

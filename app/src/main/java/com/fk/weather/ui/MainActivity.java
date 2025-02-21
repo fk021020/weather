@@ -2,6 +2,7 @@ package com.fk.weather.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -89,6 +90,9 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
     //是否正在刷新
     private boolean isRefresh;
 
+    //跳转页面Intent
+    private ActivityResultLauncher<Intent> jumpActivityIntent;
+
     /**
      * 注册意图
      */
@@ -101,6 +105,21 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             if (fineLocation && writeStorage) {
                 //权限已经获取到，开始定位
                 startLocation();
+            }
+        });
+        //城市管理页面返回数据
+        jumpActivityIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                //获取上个页面返回的数据
+                String city = result.getData().getStringExtra(Constant.CITY_RESULT);
+                //检查返回的城市 , 如果返回的城市是当前定位城市，并且当前定位标志为0，则不需要请求
+                if (city.equals(MVUtils.getString(Constant.LOCATION_CITY)) && cityFlag == 0) {
+                    Log.d("TAG", "onRegister: 管理城市页面返回不需要进行天气查询");
+                    return;
+                }
+                //反之就直接调用选中城市的方法进行城市天气搜索
+                Log.d("TAG", "onRegister: 管理城市页面返回进行天气查询");
+                selectedCity(city);
             }
         });
     }
@@ -269,6 +288,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             String bingUrl = MVUtils.getString(Constant.BING_URL);
             //更新壁纸
             updateBgImage(item.isChecked(), bingUrl);
+        } else if (itemId == R.id.item_manage_city) {             //管理城市
+            jumpActivityIntent.launch(new Intent(mContext, ManageCityActivity.class));
         }
         return true;
     }
@@ -466,6 +487,10 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         String district = bdLocation.getDistrict();     //获取区县
         if (viewModel != null && district != null) {
             mCityName = district; //定位后重新赋值
+            //保存定位城市
+            MVUtils.put(Constant.LOCATION_CITY, district);
+            //保存到我的城市数据表中
+            viewModel.addMyCityData(district);
             //显示当前定位城市
             binding.tvCityName.setText(district);
             //搜索城市
