@@ -185,18 +185,18 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
         //滑动监听
         binding.layScroll.setOnScrollChangeListener((View.OnScrollChangeListener)
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                    if (scrollY > oldScrollY) {
-                        //getMeasuredHeight() 表示控件的绘制高度
-                        if (scrollY > binding.layScrollHeight.getMeasuredHeight()) {
-                            binding.tvTitle.setText((mCityName == null ? "城市天气" : mCityName));
-                        }
-                    } else if (scrollY < oldScrollY) {
-                        if (scrollY < binding.layScrollHeight.getMeasuredHeight()) {
-                            //改回原来的
-                            binding.tvTitle.setText("城市天气");
-                        }
-                    }
-                });
+            if (scrollY > oldScrollY) {
+                //getMeasuredHeight() 表示控件的绘制高度
+                if (scrollY > binding.layScrollHeight.getMeasuredHeight()) {
+                    binding.materialToolbar.setTitle((mCityName == null ? "城市天气" : mCityName));
+                }
+            } else if (scrollY < oldScrollY) {
+                if (scrollY < binding.layScrollHeight.getMeasuredHeight()) {
+                    //改回原来的
+                    binding.materialToolbar.setTitle("城市天气");
+                }
+            }
+        });
     }
 
     /**
@@ -321,7 +321,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      */
     public void setToolbarMoreIconCustom(Toolbar toolbar) {
         if (toolbar == null) return;
-        toolbar.setTitle("");
+        toolbar.setTitle("城市天气");
         Drawable moreIcon = ContextCompat.getDrawable(toolbar.getContext(), R.drawable.ic_baseline_more_vert_24);
         if (moreIcon != null) toolbar.setOverflowIcon(moreIcon);
         setSupportActionBar(toolbar);
@@ -420,6 +420,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
             });
             //空气质量返回
             viewModel.airResponseMutableLiveData.observe(this, airResponse -> {
+                dismissLoadingDialog();//隐藏加载窗口
                 AirResponse.NowBean now = airResponse.getNow();
                 if (now == null) return;
                 binding.rpbAqi.setMaxProgress(300);//最大进度，用于计算
@@ -483,6 +484,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
      */
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
+        showLoadingDialog();//显示加载弹窗
         String city = bdLocation.getCity();             //获取城市
         String district = bdLocation.getDistrict();     //获取区县
         if (viewModel != null && district != null) {
