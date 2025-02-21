@@ -22,6 +22,12 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
     // 天气预报数据列表
     private final List<DailyResponse.DailyBean> dailyBeans;
 
+    private OnClickItemCallback onClickItemCallback;
+
+    public void setOnClickItemCallback(OnClickItemCallback onClickItemCallback) {
+        this.onClickItemCallback = onClickItemCallback;
+    }
+
     /**
      * 构造方法，初始化天气预报数据列表
      *
@@ -42,7 +48,14 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemDailyRvBinding binding = ItemDailyRvBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ViewHolder(binding);
+        ViewHolder holder = new ViewHolder(binding);
+        //添加点击回调
+        binding.getRoot().setOnClickListener(v -> {
+            if (onClickItemCallback != null) {
+                onClickItemCallback.onItemClick(holder.getAdapterPosition());
+            }
+        });
+        return holder;
     }
 
     /**

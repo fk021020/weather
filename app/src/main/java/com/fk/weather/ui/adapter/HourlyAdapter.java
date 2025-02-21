@@ -24,11 +24,24 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         this.hourlyBeans = dailyBeans;
     }
 
+    private OnClickItemCallback onClickItemCallback;
+
+    public void setOnClickItemCallback(OnClickItemCallback onClickItemCallback) {
+        this.onClickItemCallback = onClickItemCallback;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemHourlyRvBinding binding = ItemHourlyRvBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ViewHolder(binding);
+        ViewHolder holder = new ViewHolder(binding);
+        //添加点击回调
+        binding.getRoot().setOnClickListener(v -> {
+            if (onClickItemCallback != null) {
+                onClickItemCallback.onItemClick(holder.getAdapterPosition());
+            }
+        });
+        return holder;
     }
 
     @Override
