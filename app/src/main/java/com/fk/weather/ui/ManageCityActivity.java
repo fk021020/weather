@@ -17,12 +17,14 @@ import com.fk.weather.Constant;
 import com.fk.weather.databinding.ActivityManageCityBinding;
 import com.fk.weather.db.bean.MyCity;
 import com.fk.weather.db.bean.Province;
+import com.fk.weather.utils.AddCityDialog;
 import com.fk.weather.ui.adapter.MyCityAdapter;
 import com.fk.weather.ui.adapter.OnClickItemCallback;
 import com.fk.weather.viewmodel.ManageCityViewModel;
 import com.fk.library.base.NetworkActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,15 +46,28 @@ public class ManageCityActivity extends NetworkActivity<ActivityManageCityBindin
     private void initView() {
         backAndFinish(binding.toolbar);
         setStatusBar(true);
-        myCityAdapter.setOnClickItemCallback(position -> {
-            Intent intent = new Intent();
-            intent.putExtra(Constant.CITY_RESULT, myCityList.get(position).getCityName());
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-        });
+        myCityAdapter.setOnClickItemCallback(position -> setPageResult(myCityList.get(position).getCityName()));
         binding.rvCity.setLayoutManager(new LinearLayoutManager(ManageCityActivity.this));
         binding.rvCity.setAdapter(myCityAdapter);
-        binding.btnAddCity.setOnClickListener(v -> showMsg("添加城市"));
+
+        binding.btnAddCity.setOnClickListener(v ->
+                AddCityDialog.show(ManageCityActivity.this, Arrays.asList(Constant.CITY_ARRAY), cityName -> {
+                    //保存到数据库中
+                    viewModel.addMyCityData(cityName);
+                    //设置页面返回数据
+                    setPageResult(cityName);
+                }));
+    }
+
+    /**
+     * 设置页面返回数据
+     * @param cityName 城市名
+     */
+    private void setPageResult(String cityName) {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.CITY_RESULT, cityName);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     @SuppressLint("NotifyDataSetChanged")
