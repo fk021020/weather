@@ -51,6 +51,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fk.weather.utils.RecyclerViewAnimation.runLayoutAnimation;
+import static com.fk.weather.utils.RecyclerViewAnimation.runLayoutAnimationRight;
+
 public class MainActivity extends NetworkActivity<ActivityMainBinding> implements LocationCallback, CityDialog.SelectedCityCallback {
 
     //权限数组
@@ -394,7 +397,8 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     //设置当天最高温和最低温
                     binding.tvHeight.setText(String.format("%s℃", daily.get(0).getTempMax()));
                     binding.tvLow.setText(String.format(" / %s℃", daily.get(0).getTempMin()));
-
+                    //底部动画展示
+                    runLayoutAnimation(binding.recyclerView);
 
                 }
             });
@@ -424,6 +428,7 @@ public class MainActivity extends NetworkActivity<ActivityMainBinding> implement
                     }
                     hourlyBeanList.addAll(hourly);
                     hourlyAdapter.notifyDataSetChanged();
+                    runLayoutAnimationRight(binding.rvHourly);
                 }
             });
             //空气质量返回
