@@ -18,6 +18,8 @@
 
     <style name="Theme.Weather" parent="Base.Theme.Weather" />
 
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <!--圆环进度条-->
     <declare-styleable name="RoundProgressBar">
         <attr name="round_max_progress" format="float" />

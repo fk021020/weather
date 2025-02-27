@@ -7,6 +7,7 @@ import com.fk.weather.db.bean.BingResponse;
 import com.fk.weather.db.bean.DailyResponse;
 import com.fk.weather.db.bean.HourlyResponse;
 import com.fk.weather.db.bean.NowResponse;
+import com.fk.weather.db.bean.MoreAirFiveResponse;
 import com.fk.weather.db.bean.LifestyleResponse;
 import com.fk.weather.db.bean.SearchCityResponse;
 
@@ -85,4 +86,14 @@ public interface ApiService {
      */
     @GET("/v7/air/now?key=" + API_KEY)
     Observable<AirResponse> airWeather(@Query("location") String location);
+
+    /**
+     * 空气质量5天预报
+     *
+     * @param location 城市id
+     * @return 返回空气质量5天预报数据 MoreAirFiveResponse
+     */
+    @GET("/v7/air/5d?key=" + API_KEY)
+    Observable<MoreAirFiveResponse> airFiveWeather(@Query("location") String location);
+
 }
